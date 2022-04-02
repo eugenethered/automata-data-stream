@@ -18,9 +18,9 @@ class DataWebSocket:
         return self
 
     async def __anext__(self):
-        message = await self.receive()
-        if message:
-            return message
+        payload = await self.receive()
+        if payload:
+            return payload
         else:
             raise StopAsyncIteration
 

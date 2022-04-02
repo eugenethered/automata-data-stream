@@ -1,18 +1,20 @@
 import asyncio
 
+from data.payload.DataPayloadProcessor import DataPayloadProcessor
 from data.websocket.DataWebSocket import DataWebSocket
 
 
 class WebSocketRunner:
 
-    def __init__(self, url):
+    def __init__(self, url, payload_processor: DataPayloadProcessor):
+        self.payload_processor = payload_processor
         self.web_socket = DataWebSocket(url)
         self.loop = asyncio.get_event_loop()
 
-    def fetch_single_message(self):
-        return self.loop.run_until_complete(self.__receive_single_message())
+    def fetch_single_payload(self):
+        return self.loop.run_until_complete(self.__receive_single_payload())
 
-    async def __receive_single_message(self):
+    async def __receive_single_payload(self):
         async with self.web_socket as ws:
             return await ws.receive()
 
@@ -21,6 +23,5 @@ class WebSocketRunner:
 
     async def __receive_data(self):
         async with self.web_socket as ws:
-            async for message in ws:
-                # todo: need to have a message processor here
-                print(message)
+            async for payload in ws:
+                self.payload_processor.process_payload(payload)
