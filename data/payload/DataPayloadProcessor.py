@@ -1,7 +1,6 @@
-from typing import Any
 
 
 class DataPayloadProcessor:
 
-    def process_payload(self, payload) -> Any:
+    def process_payload(self, payload):
         pass
