@@ -1,5 +1,5 @@
 # automata-data-stream
-Data Stream
+Automata Data Stream
 
 ## Packaging
 `python3 -m build`
