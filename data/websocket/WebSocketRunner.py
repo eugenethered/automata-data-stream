@@ -4,6 +4,7 @@ from data.payload.DataPayloadProcessor import DataPayloadProcessor
 from data.websocket.DataWebSocket import DataWebSocket
 
 
+# todo: need to stop web socket via request or SYS_KILL
 class WebSocketRunner:
 
     def __init__(self, url, payload_processor: DataPayloadProcessor):
