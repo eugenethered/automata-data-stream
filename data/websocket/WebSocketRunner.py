@@ -9,7 +9,7 @@ class WebSocketRunner:
         self.web_socket = DataWebSocket(url)
         self.loop = asyncio.get_event_loop()
 
-    def fetch_single_payload(self):
+    def fetch_single_message(self):
         return self.loop.run_until_complete(self.__receive_single_message())
 
     async def __receive_single_message(self):
