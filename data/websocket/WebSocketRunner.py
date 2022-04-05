@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from data.payload.DataPayloadProcessor import DataPayloadProcessor
 from data.websocket.DataWebSocket import DataWebSocket
@@ -8,6 +9,7 @@ from data.websocket.DataWebSocket import DataWebSocket
 class WebSocketRunner:
 
     def __init__(self, url, payload_processor: DataPayloadProcessor):
+        logging.info(f'Websocket runner initialized with URL:{url}')
         self.payload_processor = payload_processor
         self.web_socket = DataWebSocket(url)
         self.loop = asyncio.get_event_loop()
@@ -20,6 +22,7 @@ class WebSocketRunner:
             return await ws.receive()
 
     def receive_data(self):
+        logging.info('Websocket runner set to receiving data')
         asyncio.run(self.__receive_data())
 
     async def __receive_data(self):
