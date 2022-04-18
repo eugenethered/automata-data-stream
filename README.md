@@ -3,10 +3,7 @@
 ## Packaging
 `python3 -m build`
 
-## Clean the build
-`rm -fr dist persuader_technology_automata_data_stream.egg-info`
-
 ## Dependencies (IDE Terminal)
-`pip install persuader-technology-automata-core`
+`pip install websockets persuader-technology-automata-core`
 
 
