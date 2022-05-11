@@ -3,11 +3,12 @@ from websockets import connect
 
 class DataWebSocket:
 
-    def __init__(self, url):
+    def __init__(self, url, ping_interval):
         self.url = url
+        self.ping_interval = ping_interval
 
     async def __aenter__(self):
-        self._conn = connect(self.url)
+        self._conn = connect(self.url, ping_interval=self.ping_interval)
         self.websocket = await self._conn.__aenter__()
         return self
 

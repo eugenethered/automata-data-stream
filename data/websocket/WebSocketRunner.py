@@ -6,12 +6,13 @@ from data.websocket.DataWebSocket import DataWebSocket
 
 
 # todo: need to stop web socket via request or SYS_KILL
+# todo: need to handle re-connects
 class WebSocketRunner:
 
-    def __init__(self, url, payload_processor: DataPayloadProcessor):
+    def __init__(self, url, payload_processor: DataPayloadProcessor, ping_interval=20):
         logging.info(f'Websocket runner initialized with URL:{url}')
         self.payload_processor = payload_processor
-        self.web_socket = DataWebSocket(url)
+        self.web_socket = DataWebSocket(url, ping_interval)
         self.loop = asyncio.get_event_loop()
 
     def fetch_single_payload(self):
