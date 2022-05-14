@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from auth.Authenticator import Authenticator
+from coreauth.Authenticator import Authenticator
 
 from data.payload.DataPayloadProcessor import DataPayloadProcessor
 from data.websocket.DataWebSocket import DataWebSocket
