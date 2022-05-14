@@ -16,15 +16,18 @@ class WebSocketRunner:
         self.url = url
         self.authenticator = self.init_authenticator(authenticator)
         self.payload_processor = payload_processor
-        self.web_socket = DataWebSocket(url, ping_interval)
+        self.web_socket = DataWebSocket(self.url, ping_interval)
         self.loop = asyncio.get_event_loop()
 
+    # todo: improve at data socket level (see: close-reconnect)
     def init_authenticator(self, authenticator: Authenticator):
         if authenticator is None:
             return None
+        logging.info(f'Websocket runner pre-authenticating before start')
         authenticator.authenticate()
         if authenticator.should_update_url():
             self.url = authenticator.update_url(self.url)
+            logging.info(f'Websocket runner pre-authenticated updated url {self.url}')
         return authenticator
 
     def fetch_single_payload(self):
