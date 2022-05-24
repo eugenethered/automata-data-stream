@@ -17,7 +17,8 @@ class WebSocketRunner:
         self.loop = asyncio.get_event_loop()
         self.running_loop = asyncio.get_running_loop()
         self.running_loop.add_signal_handler(signal.SIGTERM, self.terminate_gracefully)
-        self.running_loop.stop()
+        self.stopped_callback = None
+        self.running_callback = None
 
     def fetch_single_payload(self):
         return self.loop.run_until_complete(self.__receive_single_payload())
@@ -25,6 +26,12 @@ class WebSocketRunner:
     async def __receive_single_payload(self):
         async with self.web_socket as ws:
             return await ws.receive()
+
+    def set_stopped_callback(self, stopped_callback):
+        self.stopped_callback = stopped_callback
+
+    def set_running_callback(self, running_callback):
+        self.running_callback = running_callback
 
     def receive_data(self):
         asyncio.run(self.__receive_data())
@@ -34,7 +41,11 @@ class WebSocketRunner:
             async for payload in ws:
                 if self.kill_now is False:
                     self.payload_processor.process_payload(payload)
+                    if self.running_callback is not None:
+                        self.running_callback()
 
     def terminate_gracefully(self):
         self.kill_now = True
         self.running_loop.stop()
+        if self.stopped_callback is not None:
+            self.stopped_callback()
