@@ -43,4 +43,5 @@ class DataWebSocket:
             raise StopAsyncIteration
 
     async def receive(self):
+        # todo: design re-connect
         return await self.websocket.recv()
