@@ -48,14 +48,10 @@ class WebSocketRunner:
 
     async def init_graceful_exit(self):
         self.running_loop = asyncio.get_running_loop()
-        # todo: look into this...
-        #stop = self.running_loop.create_future()
         self.running_loop.add_signal_handler(signal.SIGTERM, self.terminate_gracefully)
 
     def terminate_gracefully(self):
-        self.log.info("Closing....1")
         self.kill_now = True
         self.running_loop.stop()
         if self.stopped_callback is not None:
-            self.log.info("Closing....2")
             self.stopped_callback()
