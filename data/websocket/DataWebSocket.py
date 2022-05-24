@@ -13,6 +13,7 @@ class DataWebSocket:
         self.url = url
         self.ping_interval = ping_interval
         self.authenticator = authenticator
+        self.shutdown_callback = None
 
     async def __aenter__(self):
         if self.authenticator is not None:
