@@ -33,6 +33,7 @@ class WebSocketRunner:
 
     def set_running_callback(self, running_callback):
         self.running_callback = running_callback
+        self.web_socket.set_running_callback(running_callback)
 
     def receive_data(self):
         asyncio.run(self.__receive_data())
@@ -41,16 +42,17 @@ class WebSocketRunner:
         async with self.web_socket as ws:
             await self.init_graceful_exit()
             async for payload in ws:
+                if self.kill_now is True:
+                    self.log.debug(f'Termination received, no more payload processing!')
                 if self.kill_now is False:
                     self.payload_processor.process_payload(payload)
-                    if self.running_callback is not None:
-                        self.running_callback()
 
     async def init_graceful_exit(self):
         self.running_loop = asyncio.get_running_loop()
         self.running_loop.add_signal_handler(signal.SIGTERM, self.terminate_gracefully)
 
     def terminate_gracefully(self):
+        self.log.debug('Attempting to terminate gracefully')
         self.kill_now = True
         self.running_loop.stop()
         if self.stopped_callback is not None:

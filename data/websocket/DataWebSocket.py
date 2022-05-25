@@ -13,7 +13,12 @@ class DataWebSocket:
         self.url = url
         self.ping_interval = ping_interval
         self.authenticator = authenticator
+        self.running_callback = None
         self.shutdown_callback = None
+
+    def set_running_callback(self, running_callback):
+        self.log.debug('Set the running callback')
+        self.running_callback = running_callback
 
     async def __aenter__(self):
         if self.authenticator is not None:
@@ -40,6 +45,8 @@ class DataWebSocket:
     async def __anext__(self):
         payload = await self.receive()
         if payload:
+            if self.running_callback is not None:
+                self.running_callback()
             return payload
         else:
             raise StopAsyncIteration
