@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import signal
+import sys
+import traceback
 
 from coreauth.Authenticator import Authenticator
 
@@ -20,6 +22,7 @@ class WebSocketRunner:
         self.running_loop = None
         self.stopped_callback = None
         self.running_callback = None
+        self.error_callback = None
 
     def fetch_single_payload(self):
         return self.loop.run_until_complete(self.__receive_single_payload())
@@ -35,8 +38,17 @@ class WebSocketRunner:
         self.running_callback = running_callback
         self.web_socket.set_running_callback(running_callback)
 
+    def set_error_callback(self, error_callback):
+        self.error_callback = error_callback
+
     def receive_data(self):
-        asyncio.run(self.__receive_data())
+        try:
+            asyncio.run(self.__receive_data())
+        except Exception as err:
+            exc_info = sys.exc_info()
+            self.log.warning(f'Process has an error:[{type(err)}] "{err}"')
+            self.error_callback()
+            traceback.print_exception(*exc_info)
 
     async def __receive_data(self):
         async with self.web_socket as ws:
